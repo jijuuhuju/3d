@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>秘密の地下通路</title>
+    <title>錯視の無限地下通路</title>
     <style>
+        /* 画面全体を真っ黒に固定 */
         body {
             margin: 0;
             background-color: #000;
@@ -15,100 +16,59 @@
             height: 100vh;
         }
 
-        /* 3D空間の視野を設定 */
-        .stage {
-            perspective: 350px;
+        /* 🚀 脳をバグらせる錯視の部屋 */
+        .illusion-room {
+            position: relative;
             width: 100vw;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-            overflow: hidden;
+            /* 白と黒の四角形が奥に向かって無限に吸い込まれていく幾何学グラデーション */
+            background-image: 
+                radial-gradient(circle at center, transparent 20%, #000 20%, #000 40%, transparent 40%, transparent 60%, #000 60%, #000 80%, transparent 80%),
+                linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                linear-gradient(45deg, #fff 25%, #000 25%, #000 75%, #fff 75%, #fff);
+            background-size: 100px 100px;
+            background-position: 0 0, 0 0, 50px 50px;
+            
+            /* 💡 中心に向かって強烈なパース（立体感）をつけるための特殊エフェクト */
+            mask-image: radial-gradient(circle at center, transparent 10%, #000 90%);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 10%, #000 90%);
+
+            /* 2秒間で模様が中央にシュッと吸い込まれ続けるアニメーション */
+            animation: tunnelFly 2s linear infinite;
         }
 
-        /* 4枚の壁を完全に1つに合体させた立体通路（チューブ） */
-        .tunnel {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            transform-style: preserve-3d;
-            /* 2秒で綺麗に繋がる位置まで手前に引き抜き、無限ループさせます */
-            animation: moveTunnel 2s linear infinite;
-        }
-
-        /* すべての面（左・右・床・天井）の共通サイズと質感（明るさを調整） */
-        .face {
-            position: absolute;
-            width: 400px;
-            height: 2400px; /* 途切れないように十分な奥行きの長さを確保 */
-            /* 💡 壁全体を明るめのグレーに変更し、見えやすくしました */
-            background-color: #524b47; 
-            /* 💡 奥の暗闇へ向かうグラデーションをなだらかにし、手前をしっかり明るく設定 */
-            background-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 60%);
-        }
-
-        /* 左壁：中心から左へ200px離して90度回転 */
-        .left {
-            transform: rotateY(90deg) translateZ(-200px) translateY(-1000px);
-        }
-
-        /* 右壁：中心から右へ200px離して-90度回転 */
-        .right {
-            transform: rotateY(-90deg) translateZ(-200px) translateY(-1000px);
-            /* 💡 右壁は少し明るさを変えて立体的な角がはっきり見えるように設定 */
-            background-color: #5c5450; 
-        }
-
-        /* 床：中心から下へ200px離して-90度回転 */
-        .floor {
-            transform: rotateX(-90deg) translateZ(-200px) translateY(1000px);
-            background-color: #3b3532;
-        }
-
-        /* 天井：中心から上へ200px離して90度回転 */
-        .ceiling {
-            transform: rotateX(90deg) translateZ(-200px) translateY(1000px);
-            background-color: #47403d;
-        }
-
-        /* 🔄 継ぎ目なく滑らかに無限ループさせるためのアニメーション移動量 */
-        @keyframes moveTunnel {
+        /* 🔄 模様のサイズを「大 ➔ 小」へループさせることで、自分が奥へ猛スピードで進んでいるように錯覚させます */
+        @keyframes tunnelFly {
             0% {
-                transform: translateZ(0px);
+                background-size: 160px 160px;
+                filter: contrast(150%) hue-rotate(0deg);
             }
             100% {
-                transform: translateZ(1200px); /* 1ループで進む完璧な距離 */
+                background-size: 80px 80px;
+                filter: contrast(150%) hue-rotate(360deg);
             }
         }
 
-        /* 最奥の中央に固定され、吸い込まれ続ける暗闇 */
-        .portal {
+        /* 中央の吸い込み口（固定された一番奥の暗闇） */
+        .center-blackhole {
             position: absolute;
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             background: #000;
             border-radius: 50%;
-            box-shadow: 0 0 50px rgba(0,0,0,1);
+            /* ほんのり怪しく光らせて吸い込み感を強調 */
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.2); 
             z-index: 10;
-            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="stage">
-        <!-- 奥の暗闇（トンネルの出口）を中央に固定 -->
-        <div class="portal"></div>
+    <!-- 最奥の中心点 -->
+    <div class="center-blackhole"></div>
 
-        <!-- 4枚の壁が最初から一体化している無限トンネル -->
-        <div class="tunnel">
-            <div class="face left"></div>
-            <div class="face right"></div>
-            <div class="face floor"></div>
-            <div class="face ceiling"></div>
-        </div>
-    </div>
+    <!-- 1枚の背景だけで錯覚を起こすトンネル空間 -->
+    <div class="illusion-room"></div>
 
 </body>
 </html>
