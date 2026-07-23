@@ -15,7 +15,7 @@
             height: 100vh;
         }
 
-        /* 3D空間の視野を設定（パースを調整して奥をしっかり見せます） */
+        /* 3D空間の視野を設定 */
         .stage {
             perspective: 350px;
             width: 100vw;
@@ -27,7 +27,7 @@
             overflow: hidden;
         }
 
-        /* 🚀 4枚の壁を完全に1つに合体させた立体通路（チューブ） */
+        /* 4枚の壁を完全に1つに合体させた立体通路（チューブ） */
         .tunnel {
             position: relative;
             width: 400px;
@@ -37,37 +37,39 @@
             animation: moveTunnel 2s linear infinite;
         }
 
-        /* すべての面（左・右・床・天井）の共通サイズと質感（普通の無地） */
+        /* すべての面（左・右・床・天井）の共通サイズと質感（明るさを調整） */
         .face {
             position: absolute;
             width: 400px;
             height: 2400px; /* 途切れないように十分な奥行きの長さを確保 */
-            background-color: #2b2522; /* 落ち着いたコンクリート風のダークグレー */
-            /* 奥に行くほど自然に暗くなる影のグラデーション */
-            background-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.95) 70%);
+            /* 💡 壁全体を明るめのグレーに変更し、見えやすくしました */
+            background-color: #524b47; 
+            /* 💡 奥の暗闇へ向かうグラデーションをなだらかにし、手前をしっかり明るく設定 */
+            background-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.85) 60%);
         }
 
-        /* 【確定】左壁：中心から左へ200px離して90度回転 */
+        /* 左壁：中心から左へ200px離して90度回転 */
         .left {
             transform: rotateY(90deg) translateZ(-200px) translateY(-1000px);
         }
 
-        /* 【確定】右壁：中心から右へ200px離して-90度回転 */
+        /* 右壁：中心から右へ200px離して-90度回転 */
         .right {
             transform: rotateY(-90deg) translateZ(-200px) translateY(-1000px);
-            background-color: #2e2825; /* 左右でごくわずかに明度を変えて角を識別しやすく設定 */
+            /* 💡 右壁は少し明るさを変えて立体的な角がはっきり見えるように設定 */
+            background-color: #5c5450; 
         }
 
-        /* 【確定】床：中心から下へ200px離して-90度回転 */
+        /* 床：中心から下へ200px離して-90度回転 */
         .floor {
             transform: rotateX(-90deg) translateZ(-200px) translateY(1000px);
-            background-color: #1c1817;
+            background-color: #3b3532;
         }
 
-        /* 【確定】天井：中心から上へ200px離して90度回転 */
+        /* 天井：中心から上へ200px離して90度回転 */
         .ceiling {
             transform: rotateX(90deg) translateZ(-200px) translateY(1000px);
-            background-color: #241f1d;
+            background-color: #47403d;
         }
 
         /* 🔄 継ぎ目なく滑らかに無限ループさせるためのアニメーション移動量 */
