@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            background-color: #050303;
+            background-color: #030202;
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -17,7 +17,7 @@
 
         /* 3Dのカメラ視野を設定 */
         .stage {
-            perspective: 600px;
+            perspective: 500px;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -25,104 +25,79 @@
             align-items: center;
         }
 
-        /* 廊下のコンテナ */
+        /* 廊下のコンテナ（前進するアニメーションをここで一括処理） */
         .corridor {
             position: relative;
             width: 400px;
             height: 400px;
             transform-style: preserve-3d;
+            /* 🚀 廊下全体が奥から手前へループ移動することで、滑らかな自動前進を表現 */
+            animation: moveCorridor 2s linear infinite;
         }
 
-        /* レンガ壁・床・天井の共通アニメーション設定 */
-        .wall, .floor, .ceiling {
+        /* すべての壁の基本設定（模様を消して、コンクリート風の無地にしました） */
+        .wall-segment {
             position: absolute;
-            /* 🚀 一定の速度で無限に背景を動かすアニメーション（3秒で1ループ） */
-            animation: walkForward 3s linear infinite;
+            background-color: #2b2522; /* 落ち着いたダークグレー */
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.8); /* 奥を暗く見せる影 */
         }
 
-        /* 赤レンガ壁のデザイン */
-        .wall {
+        /* 横の壁（左右対称に完全に固定） */
+        .left-wall {
             width: 1200px;
             height: 400px;
-            background-color: #4a231c;
-            background-image: 
-                linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.4) 50%),
-                linear-gradient(rgba(0,0,0,0.4) 50%, transparent 50%);
-            background-size: 60px 30px; /* 横幅60pxで1ループする模様 */
-            box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
-        }
-
-        /* 左のレンガ壁 */
-        .left-wall {
             transform: rotateY(90deg) translateZ(-200px) translateX(-600px);
         }
 
-        /* 右のレンガ壁 */
         .right-wall {
+            width: 1200px;
+            height: 400px;
             transform: rotateY(-90deg) translateZ(-200px) translateX(600px);
         }
 
-        /* 床（暗い石畳風） */
+        /* 床と天井 */
         .floor {
             width: 400px;
             height: 1200px;
-            background: repeating-linear-gradient(#111 0px, #111 40px, #050505 41px, #050505 45px);
-            background-size: 100% 45px; /* 縦幅45pxで1ループ */
+            background-color: #1a1615;
             transform: rotateX(90deg) translateZ(-200px) translateY(-600px);
-            box-shadow: inset 0 0 100px rgba(0,0,0,1);
-            animation-name: walkFloor; /* 床専用の縦移動アニメーション */
         }
 
-        /* 天井（暗闇） */
         .ceiling {
             width: 400px;
             height: 1200px;
-            background: #0d0908;
+            background-color: #221d1b;
             transform: rotateX(-90deg) translateZ(-200px) translateY(600px);
-            box-shadow: inset 0 0 100px rgba(0,0,0,1);
-            animation-name: walkCeiling; /* 天井専用の縦移動アニメーション */
         }
 
-        /* 🔄 【壁の無限移動】背景のレンガ模様を横にスライドさせて前進を表現 */
-        @keyframes walkForward {
-            0% { background-position: 0px 0; }
-            100% { background-position: -60px 0; } /* レンガ1個分（60px）奥へ流す */
+        /* 🔄 奥行き（Z軸）をループさせて、ガタつかずに永遠に進ませる魔術 */
+        @keyframes moveCorridor {
+            0% { transform: translateZ(0px); }
+            100% { transform: translateZ(400px); } /* 廊下のパーツ1個分だけ手前に引く */
         }
 
-        /* 🔄 【床の無限移動】 */
-        @keyframes walkFloor {
-            0% { background-position: 0 0px; }
-            100% { background-position: 0 -45px; } /* 石畳1個分奥へ流す */
-        }
-
-        /* 🔄 【天井の無限移動】 */
-        @keyframes walkCeiling {
-            0% { background-position: 0 0px; }
-            100% { background-position: 0 -45px; }
-        }
-
-        /* 奥に見える地下への暗闇（固定配置） */
+        /* 奥に見える固定された暗闇（吸い込まれる中心点） */
         .portal {
             position: absolute;
-            width: 120px;
+            width: 160px;
             height: 160px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 1px solid rgba(255,255,255,0.05);
-            transform: translateZ(-1100px) translateY(80px);
-            box-shadow: 0 0 30px rgba(0,0,0,1);
-            z-index: 10;
+            background: #000;
+            /* 廊下のアニメーションの影響を受けないように、stageの直下に配置します */
         }
     </style>
 </head>
 <body>
 
     <div class="stage">
+        <!-- 奥の暗闇（トンネルの出口）を中央に固定 -->
+        <div class="portal"></div>
+
+        <!-- 自動で手前に流れ続ける立体廊下 -->
         <div class="corridor">
-            <div class="wall left-wall"></div>
-            <div class="wall right-wall"></div>
-            <div class="floor"></div>
-            <div class="ceiling"></div>
-            <div class="portal"></div>
+            <div class="wall-segment left-wall"></div>
+            <div class="wall-segment right-wall"></div>
+            <div class="wall-segment floor"></div>
+            <div class="wall-segment ceiling"></div>
         </div>
     </div>
 
