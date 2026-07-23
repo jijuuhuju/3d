@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秘密の地下通路</title>
+    <style>
+        /* 画面全体の闇を設定 */
+        body {
+            margin: 0;
+            background-color: #050303;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* 3D空間の奥行きを設定（数値が小さいほどパースがキツくなります） */
+        .stage {
+            perspective: 800px;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 廊下全体を包むコンテナ */
+        .corridor {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            transform-style: preserve-3d;
+            /* スクロールやクリックに合わせて進むアニメーション（後述） */
+            transition: transform 1s ease-out;
+        }
+
+        /* 壁の共通設定 */
+        .wall {
+            position: absolute;
+            width: 800px; /* 奥行きを深くするために長めに設定 */
+            height: 400px;
+            /* CSSだけでレンガ風の模様を表現（画像を読まないから爆速） */
+            background-color: #3d1c16;
+            background-image: 
+                linear-gradient(90deg, transparent 50%, rgba(0,0,0,.5) 50%),
+                linear-gradient(rgba(0,0,0,.5) 50%, transparent 50%);
+            background-size: 40px 20px;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.8); /* 奥を暗くする影 */
+        }
+
+        /* 左のレンガ壁：90度回転させて左側に配置 */
+        .left-wall {
+            transform: rotateY(90deg) translateZ(-400px) translateX(-400px);
+        }
+
+        /* 右のレンガ壁：-90度回転させて右側に配置 */
+        .right-wall {
+            transform: rotateY(-90deg) translateZ(-400px) translateX(400px);
+        }
+
+        /* 床：石畳風 */
+        .floor {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, #222 20%, #050505 80%);
+            transform: rotateX(90deg) translateZ(-200px) translateX(-200px);
+            opacity: 0.5;
+        }
+
+        /* 奥に見える謎の光（地下への入り口） */
+        .portal {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            background: radial-gradient(circle, #ff6600 0%, transparent 70%);
+            transform: translateZ(-800px) translateY(100px);
+            filter: blur(10px);
+            cursor: pointer;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateZ(-800px) translateY(100px) scale(0.9); opacity: 0.5; }
+            100% { transform: translateZ(-800px) translateY(100px) scale(1.1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage">
+        <div class="corridor" id="corridor">
+            <!-- 左右のレンガ壁 -->
+            <div class="wall left-wall"></div>
+            <div class="wall right-wall"></div>
+            <!-- 床 -->
+            <div class="floor"></div>
+            <!-- 奥に見える怪しい光 -->
+            <div class="portal" onclick="goDeeper()"></div>
+        </div>
+    </div>
+
+    <script>
+        // 奥の光をクリックすると、廊下が手前に迫ってきて「進む」演出
+        function goDeeper() {
+            const corridor = document.getElementById('corridor');
+            // Z軸（奥行き）を手前に700px移動させる
+            corridor.style.transform = 'translateZ(700px)';
+            
+            // 1秒後に地下のページへ切り替える（デモとしてアラートを表示）
+            setTimeout(() => {
+                alert('地下の秘密基地へ到達しました！ここに本編サイトを作ります。');
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>
