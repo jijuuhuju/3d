@@ -3,72 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>錯視の無限地下通路</title>
+    <title>錯視の迷宮 - ILLUSION PORTAL</title>
     <style>
-        /* 画面全体を真っ黒に固定 */
         body {
             margin: 0;
             background-color: #000;
             overflow: hidden;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
 
-        /* 🚀 脳をバグらせる錯視の部屋 */
-        .illusion-room {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            /* 白と黒の四角形が奥に向かって無限に吸い込まれていく幾何学グラデーション */
-            background-image: 
-                radial-gradient(circle at center, transparent 20%, #000 20%, #000 40%, transparent 40%, transparent 60%, #000 60%, #000 80%, transparent 80%),
-                linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
-                linear-gradient(45deg, #fff 25%, #000 25%, #000 75%, #fff 75%, #fff);
-            background-size: 100px 100px;
-            background-position: 0 0, 0 0, 50px 50px;
-            
-            /* 💡 中心に向かって強烈なパース（立体感）をつけるための特殊エフェクト */
-            mask-image: radial-gradient(circle at center, transparent 10%, #000 90%);
-            -webkit-mask-image: radial-gradient(circle at center, transparent 10%, #000 90%);
-
-            /* 2秒間で模様が中央にシュッと吸い込まれ続けるアニメーション */
-            animation: tunnelFly 2s linear infinite;
-        }
-
-        /* 🔄 模様のサイズを「大 ➔ 小」へループさせることで、自分が奥へ猛スピードで進んでいるように錯覚させます */
-        @keyframes tunnelFly {
-            0% {
-                background-size: 160px 160px;
-                filter: contrast(150%) hue-rotate(0deg);
-            }
-            100% {
-                background-size: 80px 80px;
-                filter: contrast(150%) hue-rotate(360deg);
-            }
-        }
-
-        /* 中央の吸い込み口（固定された一番奥の暗闇） */
-        .center-blackhole {
+        /* 🚀 失敗ゼロ：1枚の背景だけで奥へ進む錯視空間 */
+        .bg-illusion {
             position: absolute;
-            width: 120px;
-            height: 120px;
-            background: #000;
-            border-radius: 50%;
-            /* ほんのり怪しく光らせて吸い込み感を強調 */
-            box-shadow: 0 0 60px rgba(255, 255, 255, 0.2); 
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: radial-gradient(circle at center, transparent 20%, #000 80%),
+                              repeating-conic-gradient(#000 0% 15%, #fff 15% 30%);
+            background-size: 100px 100px;
+            background-position: center;
+            animation: rotateTunnel 4s linear infinite;
+            z-index: 1;
+            opacity: 0.4; /* メニューの文字が見えやすいように少し薄く設定 */
+        }
+
+        /* 🔄 ぐるぐる回転しながら奥に吸い込まれるような錯覚を起こすアニメーション */
+        @keyframes rotateTunnel {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        /* フロントのメニュー画面（3Dバグの影響を受けない安全なレイアウタ） */
+        .content-overlay {
+            position: relative;
             z-index: 10;
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.6);
+        }
+
+        p {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+
+        /* メニューのボタン並び */
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2列できれいに並べる */
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 部屋の入り口ボタン */
+        .door-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* ボタンに触れたときのワクワク演出（怪しく光る） */
+        .door-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 210, 0.6);
+            transform: translateY(-3px);
+        }
+
+        /* スマホやiPad縦画面用の調整 */
+        @media (max-width: 600px) {
+            .menu-container {
+                grid-template-columns: 1fr; /* 1列に並べる */
+            }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 最奥の中心点 -->
-    <div class="center-blackhole"></div>
+    <!-- 背景の錯視アニメーション -->
+    <div class="bg-illusion"></div>
 
-    <!-- 1枚の背景だけで錯覚を起こすトンネル空間 -->
-    <div class="illusion-room"></div>
+    <!-- 前面のメニューコンテンツ -->
+    <div class="content-overlay">
+        <h1>👁️ 錯視の迷宮</h1>
+        <p>画像は一切なし。コードだけで脳を騙す部屋へようこそ。</p>
+
+        <div class="menu-container">
+            <!-- 各部屋へのリンク（クリックすると別ページに飛ぶ設定にします） -->
+            <a href="room1.html" class="door-btn">第1の部屋<br>「動く静止画」</a>
+            <a href="room2.html" class="door-btn">第2の部屋<br>「歪む格子」</a>
+            <a href="room3.html" class="door-btn">第3の部屋<br>「色の錯覚」</a>
+            <a href="room4.html" class="door-btn">第4の部屋<br>「無限階段」</a>
+        </div>
+    </div>
 
 </body>
 </html>
