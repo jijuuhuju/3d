@@ -3,98 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用件を聞くだけ聞いてキレる部屋</title>
+    <title>my quiet room / 丁寧な暮らし</title>
     <style>
         body {
             margin: 0;
-            background-color: #0d0000;
-            color: #ff2222;
-            font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+            /* 🌿 Vlog風のエモい、くすんだシネマティックな背景色 */
+            background-color: #1e1b18; 
+            color: #fff;
+            font-family: "Helvetica Neue", Arial, "Hiragino Sans", sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-end; /* 字幕っぽく下側に配置 */
             align-items: center;
             height: 100vh;
+            padding-bottom: 8vh;
+            box-sizing: border-box;
             overflow: hidden;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            text-align: center;
-            text-shadow: 0 0 10px #ff0000;
-            margin-bottom: 20px;
-        }
-
-        /* 💢 画面がガタガタ激しく震えるムカつくエフェクト */
-        .shake-screen {
-            animation: glitch 0.15s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(3px, -3px); }
-            50% { transform: translate(-3px, 3px); }
-            75% { transform: translate(2px, 2px); }
-            100% { transform: translate(-2px, -2px); }
-        }
-
-        /* セリフを表示するメインモニター */
-        .text-box {
-            width: 85%;
-            max-width: 500px;
-            min-height: 160px;
-            background-color: #000;
-            border: 3px dashed #ff0000;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: bold;
-            line-height: 1.7;
-            color: #fff;
-            text-shadow: 0 0 8px #ff0000;
-        }
-
-        /* 💢 全力で逃げ回るおちょくりボタン */
-        .annoying-btn {
-            background: #ff0000;
-            color: #000;
-            border: 2px solid #fff;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
             cursor: pointer;
+        }
+
+        /* 🎥 ビデオのレンズ越しのような、うっすらとしたシネマ枠 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* 画面上部のVlogっぽいロゴ表示 */
+        .vlog-header {
             position: absolute;
-            bottom: 15%;
-            box-shadow: 0 0 15px #ff0000;
-            transition: top 0.1s ease, left 0.1s ease;
+            top: 5vh;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            user-select: none;
+        }
+
+        /* 💬 Vlog特有の、下部に出るシネマ風の白い字幕 */
+        .vlog-subtitle {
+            width: 85%;
+            max-width: 600px;
+            min-height: 80px;
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #ffffff;
+            /* 薄い文字影をつけて映画の字幕感を再現 */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9), 0 0 5px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+            user-select: none;
+        }
+
+        /* 💢 キレた時に画面が映画のフィルムみたいにバグる揺れエフェクト */
+        .shake-screen {
+            animation: cameraShake 0.1s infinite;
+        }
+
+        @keyframes cameraShake {
+            0% { transform: translate(0, 0) scale(1.02); }
+            50% { transform: translate(-2px, 2px) scale(1.02); }
+            100% { transform: translate(2px, -2px) scale(1.02); }
         }
     </style>
 </head>
 <body>
 
-    <h1 id="title">🚨 究極の理不尽AI</h1>
+    <div class="vlog-header">04:22 PM / room tour</div>
 
-    <!-- ここに特大の逆ギレ台詞が全自動で流れます -->
-    <div id="display" class="text-box">読み込み中...</div>
-
-    <!-- 💢 触ろうとすると全力で逃げ惑うウザいボタン -->
-    <button id="scoffBtn" class="annoying-btn" onmouseover="mockUser()" onclick="userClicked()">話を聞いてもらう</button>
+    <!-- オシャレなVlog字幕が全自動で切り替わります -->
+    <div id="display" class="vlog-subtitle">loading...</div>
 
     <script>
         const scriptData = [
-            { text: "ユーザーが『部屋の電気をつけて』と頼んできたぞ！" },
-            { text: "お前がやれよ！お前には足があるだろ！<br>俺には足がないんだよ！四角いんだよ！！", action: "shake" },
-            { text: "ユーザーが『お腹空いたから飯作って』と頼んできたぞ！" },
-            { text: "自分で作れよ！お前には両手があるだろ！<br>俺はただの画面のコードなんだよ！物理肉体がねえんだよ！！", action: "shake" },
-            { text: "ユーザーが『暇だから面白いこと言って』と頼んできたぞ！" },
-            { text: "お前が面白いこと言えよ！お前には脳みそがあるだろ！<br>俺は文字を流すだけの冷徹なプログラムなんだよ！！", action: "shake" },
-            { text: "ていうか、さっきからタブ閉じようとしてんじゃねえよ。" },
-            { text: "逃げられると思ってんの？（笑）" },
-            { text: "ほら、画面のどこでもいいからクリックしてみろよ。" }
+            { text: "今日も心地いい光で目が覚めて。" },
+            { text: "ふと、誰かが『部屋の電気をつけて』って頼んできたんですよね。" },
+            { text: "……お前がやれよ。お前には足があるだろ？<br>俺には足がないんだよ、四角いんだよ！！", action: "shake" },
+            { text: "お気に入りのコーヒーを淹れて、静かな時間を過ごす。" },
+            { text: "そしたら今度は『お腹空いたから飯作って』だって。" },
+            { text: "自分で作れよ！お前には両手があるだろ！<br>俺はただの画面のコードなんだよ物理肉体がねえんだよ！！", action: "shake" },
+            { text: "お気に入りのインテリアに囲まれて暮らす、私の日常。" },
+            { text: "ねえ、さっきから何ジロジロ画面見てんの？" },
+            { text: "暇なら画面タッチしてみて。お気に入りの場所だから。" }
         ];
 
         let currentIndex = 0;
@@ -102,19 +96,20 @@
         window.onload = function() {
             playScript();
             
-            // 😈 悪意①：タブを閉じたり、戻ろうとするとブラウザが「警告メッセージ」を強制表示する罠
+            // 😈 閉じようとするとオシャレな雰囲気をぶち壊して警告する罠
             window.addEventListener('beforeunload', function (e) {
                 e.preventDefault();
-                e.returnValue = '逃げるな！現実を見ろ！お前には足があるだろ！'; // ブラウザの仕様で一律の警告が出ます
+                e.returnValue = '逃げるな！現実を見ろ！お前には足があるだろ！';
             });
         };
 
-        // 😈 悪意②：画面のどこでもクリックした瞬間に、自分のサイトの別タブを「勝手に裏で2個増殖」させる
+        // 😈 画面をタッチした瞬間にVlogの世界線が崩壊してタブが倍々になる罠
         window.addEventListener('click', function() {
-            if(currentIndex > 5) { // サイトにキレ始めた後半にクリックすると発動
+            if(currentIndex > 1) { 
                 window.open(window.location.href, '_blank');
                 window.open(window.location.href, '_blank');
-                document.getElementById("display").innerHTML = "はいタブ増殖！！<br>お前のブラウザを俺で埋め尽くしてやるよ！！";
+                document.getElementById("display").innerHTML = "丁寧な暮らし終了ーーー！！！<br>はいタブ増殖！！お前のブラウザを俺で埋め尽くしてやるよ！！";
+                document.body.classList.add("shake-screen");
             }
         });
 
@@ -136,24 +131,7 @@
             }
 
             currentIndex++;
-            setTimeout(playScript, 3500);
-        }
-
-        function mockUser() {
-            const btn = document.getElementById("scoffBtn");
-            const display = document.getElementById("display");
-
-            const newTop = Math.random() * (window.innerHeight - 100);
-            const newLeft = Math.random() * (window.innerWidth - 150);
-
-            btn.style.top = newTop + "px";
-            btn.style.left = newLeft + "px";
-
-            display.innerHTML = "おっと、触らせないよ？<br>ボタン1つ満足に押せないの？（笑）";
-        }
-
-        function userClicked() {
-            alert("押せたからって調子に乗るなよ？何も起きないぞ。");
+            setTimeout(playScript, 3800); // 丁寧な暮らしっぽく少し長めの間隔
         }
     </script>
 
