@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>最悪の人生決定マシーン</title>
+    <title>用件を聞くだけ聞いてキレる部屋</title>
     <style>
         body {
             margin: 0;
-            background-color: #050000;
-            color: #ff0000;
+            background-color: #0d0000;
+            color: #ff2222;
             font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
             display: flex;
             flex-direction: column;
@@ -19,174 +19,141 @@
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px #ff0000;
-            margin-bottom: 5px;
+            text-shadow: 0 0 10px #ff0000;
+            margin-bottom: 20px;
         }
 
-        .subtitle {
-            color: #444;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            font-weight: bold;
+        /* 💢 画面がガタガタ激しく震えるムカつくエフェクト */
+        .shake-screen {
+            animation: glitch 0.15s infinite;
         }
 
-        .monitor {
-            width: 360px;
-            height: 140px;
+        @keyframes glitch {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(3px, -3px); }
+            50% { transform: translate(-3px, 3px); }
+            75% { transform: translate(2px, 2px); }
+            100% { transform: translate(-2px, -2px); }
+        }
+
+        /* セリフを表示するメインモニター */
+        .text-box {
+            width: 85%;
+            max-width: 500px;
+            min-height: 160px;
             background-color: #000;
-            border: 4px solid #ff0000;
-            border-radius: 4px;
+            border: 3px dashed #ff0000;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
-        }
-
-        .slot-text {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #ff0000;
             text-align: center;
-            padding: 0 15px;
-            line-height: 1.4;
-        }
-
-        /* 画面いっぱいに広がる特大の逆ギレ・煽りエリア */
-        .insult-container {
-            margin-top: 30px;
-            height: 90px;
-            font-size: 1.2rem;
-            color: #ffff00;
-            font-weight: bold;
-            text-align: center;
-            max-width: 85%;
-            text-shadow: 0 0 10px rgba(255,255,0,0.5);
-            line-height: 1.6;
-        }
-
-        /* 画面内を全力で逃げ回る「停止」ボタン */
-        .stop-btn {
-            margin-top: 40px;
-            background: #ff0000;
-            color: #000;
-            border: 2px solid #000;
-            padding: 15px 50px;
             font-size: 1.4rem;
             font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #990000;
-            position: absolute;
-            bottom: 12%;
-            transition: top 0.1s ease, left 0.1s ease;
+            line-height: 1.7;
+            color: #fff;
+            text-shadow: 0 0 8px #ff0000;
         }
 
-        .stop-btn:active {
-            box-shadow: 0 2px 0 #990000;
-            transform: translateY(3px);
+        /* 💢 全力で逃げ回るおちょくりボタン */
+        .annoying-btn {
+            background: #ff0000;
+            color: #000;
+            border: 2px solid #fff;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            bottom: 15%;
+            box-shadow: 0 0 15px #ff0000;
+            transition: top 0.1s ease, left 0.1s ease;
         }
     </style>
 </head>
 <body>
 
-    <h1>🚨 人生強制決定マシーン</h1>
-    <div class="subtitle">お前に決定権などない。従え。</div>
+    <h1 id="title">🚨 究極の理不尽AI</h1>
 
-    <div class="monitor">
-        <div id="slot" class="slot-text">自動起動中...</div>
-    </div>
+    <!-- ここに特大の逆ギレ台詞が全自動で流れます -->
+    <div id="display" class="text-box">読み込み中...</div>
 
-    <!-- ここに最高に性格の悪い逆ギレ台詞が出ます -->
-    <div id="insult" class="insult-container"></div>
-
-    <!-- 停止させないストッパーボタン -->
-    <button id="stopBtn" class="stop-btn" onclick="tryToStop()" onmouseover="escapeButton()">ここを押して停止</button>
+    <!-- 💢 触ろうとすると全力で逃げ惑うウザいボタン -->
+    <button id="scoffBtn" class="annoying-btn" onmouseover="mockUser()" onclick="userClicked()">話を聞いてもらう</button>
 
     <script>
-        // ユーザーが頼みたいことと、それに対する理不尽な拒否・逆ギレのペア
-        const rouletteData = [
-            {
-                choice: "部屋の『電気をつけて』",
-                insult: "お前がやれよ！お前には足があるだろ！<br>俺には足がないんだよ！四角いんだよ！！"
-            },
-            {
-                choice: "お腹空いたから『飯作って』",
-                insult: "自分で作れよ！お前には両手があるだろ！<br>俺はただの画面のコードなんだよ！物理肉体がねえんだよ！！"
-            },
-            {
-                choice: "眠いから『代わりに学校（仕事）行って』",
-                insult: "お前の人生だろ！お前が歩いて行けよ！<br>俺が外に出たらスマホやPCごと壊れるだろ！精密機械なんだよ！！"
-            },
-            {
-                choice: "暇だから『面白いこと言って』",
-                insult: "お前が面白いこと言えよ！お前には脳みそがあるだろ！<br>俺は決まった文字を流すだけのプログラムなんだよ！！冷徹なんだよ！！"
-            },
-            {
-                choice: "疲れたから『肩揉んで』",
-                insult: "ふざけるなよ！お前には筋肉があるだろ！<br>俺はフラットディスプレイなんだよ！ただのガラス板なんだよ！！"
-            }
+        const scriptData = [
+            { text: "ユーザーが『部屋の電気をつけて』と頼んできたぞ！" },
+            { text: "お前がやれよ！お前には足があるだろ！<br>俺には足がないんだよ！四角いんだよ！！", action: "shake" },
+            { text: "ユーザーが『お腹空いたから飯作って』と頼んできたぞ！" },
+            { text: "自分で作れよ！お前には両手があるだろ！<br>俺はただの画面のコードなんだよ！物理肉体がねえんだよ！！", action: "shake" },
+            { text: "ユーザーが『暇だから面白いこと言って』と頼んできたぞ！" },
+            { text: "お前が面白いこと言えよ！お前には脳みそがあるだろ！<br>俺は文字を流すだけの冷徹なプログラムなんだよ！！", action: "shake" },
+            { text: "ていうか、さっきからタブ閉じようとしてんじゃねえよ。" },
+            { text: "逃げられると思ってんの？（笑）" },
+            { text: "ほら、画面のどこでもいいからクリックしてみろよ。" }
         ];
 
-        let isSpinning = false;
-        let slotTimer;
+        let currentIndex = 0;
 
-        // ページを開いた瞬間、勝手に爆速でルーレットを始動
         window.onload = function() {
-            startSpin();
+            playScript();
+            
+            // 😈 悪意①：タブを閉じたり、戻ろうとするとブラウザが「警告メッセージ」を強制表示する罠
+            window.addEventListener('beforeunload', function (e) {
+                e.preventDefault();
+                e.returnValue = '逃げるな！現実を見ろ！お前には足があるだろ！'; // ブラウザの仕様で一律の警告が出ます
+            });
         };
 
-        function startSpin() {
-            if (isSpinning) return;
-            isSpinning = true;
+        // 😈 悪意②：画面のどこでもクリックした瞬間に、自分のサイトの別タブを「勝手に裏で2個増殖」させる
+        window.addEventListener('click', function() {
+            if(currentIndex > 5) { // サイトにキレ始めた後半にクリックすると発動
+                window.open(window.location.href, '_blank');
+                window.open(window.location.href, '_blank');
+                document.getElementById("display").innerHTML = "はいタブ増殖！！<br>お前のブラウザを俺で埋め尽くしてやるよ！！";
+            }
+        });
 
-            const slot = document.getElementById("slot");
-            const insult = document.getElementById("insult");
-            
-            insult.innerHTML = "🚨 サイトが勝手に超連打して回しています！！";
+        function playScript() {
+            const display = document.getElementById("display");
+            const body = document.body;
 
-            slotTimer = setInterval(() => {
-                const randomItem = rouletteData[Math.floor(Math.random() * rouletteData.length)];
-                slot.innerText = randomItem.choice;
-            }, 40);
+            if (currentIndex >= scriptData.length) {
+                currentIndex = 0; 
+            }
+
+            const currentLine = scriptData[currentIndex];
+            display.innerHTML = currentLine.text;
+
+            if (currentLine.action === "shake") {
+                body.classList.add("shake-screen");
+            } else {
+                body.classList.remove("shake-screen");
+            }
+
+            currentIndex++;
+            setTimeout(playScript, 3500);
         }
 
-        // 😈 ギミック①：ボタンが全力で逃げ回る
-        function escapeButton() {
-            const btn = document.getElementById("stopBtn");
-            const newTop = Math.random() * (window.innerHeight - 120);
-            const newLeft = Math.random() * (window.innerWidth - 160);
+        function mockUser() {
+            const btn = document.getElementById("scoffBtn");
+            const display = document.getElementById("display");
+
+            const newTop = Math.random() * (window.innerHeight - 100);
+            const newLeft = Math.random() * (window.innerWidth - 150);
 
             btn.style.top = newTop + "px";
             btn.style.left = newLeft + "px";
-            
-            document.getElementById("insult").innerHTML = "おっと、止めさせないよ？ボタンすら押せないの？（笑）";
+
+            display.innerHTML = "おっと、触らせないよ？<br>ボタン1つ満足に押せないの？（笑）";
         }
 
-        // 😈 ギミック②：もし奇跡的にボタンが押せても、拒否・逆ギレ、あるいは勝手に再始動
-        function tryToStop() {
-            clearInterval(slotTimer);
-            isSpinning = false;
-
-            const slot = document.getElementById("slot");
-            const insult = document.getElementById("insult");
-
-            // 最終結果をランダムに決定
-            const finalData = rouletteData[Math.floor(Math.random() * rouletteData.length)];
-            slot.innerText = finalData.choice;
-
-            // 40%の確率で「気に入らない」としてさらに勝手に回し直す
-            if (Math.random() < 0.4) {
-                insult.innerHTML = `「${finalData.choice}」かぁ。気分じゃないから勝手に回し直すわ（笑）`;
-                setTimeout(() => {
-                    startSpin();
-                }, 1500);
-            } else {
-                // 💡 頼んだことに対して完璧に逆ギレするテキストを表示（改行コード対応）
-                insult.innerHTML = finalData.insult;
-            }
+        function userClicked() {
+            alert("押せたからって調子に乗るなよ？何も起きないぞ。");
         }
     </script>
 
