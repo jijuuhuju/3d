@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第2の部屋 - 歪む格子</title>
+    <style>
+        body {
+            margin: 0; background-color: #000; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;
+            font-family: sans-serif; color: #fff;
+        }
+        /* 🚀 交差点に黒い点がチカチカ現れるヘルマン格子錯視 */
+        .grid-wall {
+            width: 80%; height: 60vh; max-width: 600px;
+            background-color: #000;
+            background-image: 
+                linear-gradient(90deg, #fff 4px, transparent 4px),
+                linear-gradient(#fff 4px, transparent 4px);
+            background-size: 40px 40px;
+            background-position: center;
+        }
+        .btn-back {
+            margin-top: 30px; padding: 12px 24px; background: none; border: 1px solid #fff;
+            color: #fff; border-radius: 6px; cursor: pointer; text-decoration: none; transition: 0.3s;
+        }
+        .btn-back:hover { background: #fff; color: #000; }
+    </style>
+</head>
+<body>
+    <h1>第2の部屋：きらめく格子</h1>
+    <p>交差点の「白い部分」をぼんやり見ると、周りの交差点に謎の黒い影がチカチカ現れます。</p>
+    <div class="grid-wall"></div>
+    <a href="index.html" class="btn-back">← ロビーに戻る</a>
+</body>
+</html>
