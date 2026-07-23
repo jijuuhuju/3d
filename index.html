@@ -3,121 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>錯視の迷宮 - ILLUSION PORTAL</title>
+    <title>最悪の人生決定マシーン</title>
     <style>
         body {
             margin: 0;
-            background-color: #000;
-            overflow: hidden;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            height: 100vh;
+            background-color: #050000;
+            color: #ff0000;
+            font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        /* 🚀 失敗ゼロ：1枚の背景だけで奥へ進む錯視空間 */
-        .bg-illusion {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-image: radial-gradient(circle at center, transparent 20%, #000 80%),
-                              repeating-conic-gradient(#000 0% 15%, #fff 15% 30%);
-            background-size: 100px 100px;
-            background-position: center;
-            animation: rotateTunnel 4s linear infinite;
-            z-index: 1;
-            opacity: 0.4; /* メニューの文字が見えやすいように少し薄く設定 */
-        }
-
-        /* 🔄 ぐるぐる回転しながら奥に吸い込まれるような錯覚を起こすアニメーション */
-        @keyframes rotateTunnel {
-            0% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.3) rotate(180deg); }
-            100% { transform: scale(1) rotate(360deg); }
-        }
-
-        /* フロントのメニュー画面（3Dバグの影響を受けない安全なレイアウタ） */
-        .content-overlay {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            color: #fff;
-            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
         }
 
         h1 {
-            font-size: 2.5rem;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.6);
+            font-size: 2rem;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px #ff0000;
+            margin-bottom: 5px;
         }
 
-        p {
-            font-size: 1rem;
-            color: #ccc;
-            margin-bottom: 40px;
-        }
-
-        /* メニューのボタン並び */
-        .menu-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2列できれいに並べる */
-            gap: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        /* 部屋の入り口ボタン */
-        .door-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            padding: 20px;
-            font-size: 1.1rem;
+        .subtitle {
+            color: #444;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+        }
+
+        .monitor {
+            width: 360px;
+            height: 140px;
+            background-color: #000;
+            border: 4px solid #ff0000;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+        }
+
+        .slot-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #ff0000;
+            text-align: center;
+            padding: 0 15px;
+            line-height: 1.4;
+        }
+
+        /* 画面いっぱいに広がる特大の逆ギレ・煽りエリア */
+        .insult-container {
+            margin-top: 30px;
+            height: 90px;
+            font-size: 1.2rem;
+            color: #ffff00;
+            font-weight: bold;
+            text-align: center;
+            max-width: 85%;
+            text-shadow: 0 0 10px rgba(255,255,0,0.5);
+            line-height: 1.6;
+        }
+
+        /* 画面内を全力で逃げ回る「停止」ボタン */
+        .stop-btn {
+            margin-top: 40px;
+            background: #ff0000;
+            color: #000;
+            border: 2px solid #000;
+            padding: 15px 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 5px 0 #990000;
+            position: absolute;
+            bottom: 12%;
+            transition: top 0.1s ease, left 0.1s ease;
         }
 
-        /* ボタンに触れたときのワクワク演出（怪しく光る） */
-        .door-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #00ffcc;
-            box-shadow: 0 0 20px rgba(0, 255, 210, 0.6);
-            transform: translateY(-3px);
-        }
-
-        /* スマホやiPad縦画面用の調整 */
-        @media (max-width: 600px) {
-            .menu-container {
-                grid-template-columns: 1fr; /* 1列に並べる */
-            }
-            h1 { font-size: 1.8rem; }
+        .stop-btn:active {
+            box-shadow: 0 2px 0 #990000;
+            transform: translateY(3px);
         }
     </style>
 </head>
 <body>
 
-    <!-- 背景の錯視アニメーション -->
-    <div class="bg-illusion"></div>
+    <h1>🚨 人生強制決定マシーン</h1>
+    <div class="subtitle">お前に決定権などない。従え。</div>
 
-    <!-- 前面のメニューコンテンツ -->
-    <div class="content-overlay">
-        <h1>👁️ 錯視の迷宮</h1>
-        <p>画像は一切なし。コードだけで脳を騙す部屋へようこそ。</p>
-
-        <div class="menu-container">
-            <!-- 各部屋へのリンク（クリックすると別ページに飛ぶ設定にします） -->
-            <a href="room1.html" class="door-btn">第1の部屋<br>「動く静止画」</a>
-            <a href="room2.html" class="door-btn">第2の部屋<br>「歪む格子」</a>
-            <a href="room3.html" class="door-btn">第3の部屋<br>「色の錯覚」</a>
-            <a href="room4.html" class="door-btn">第4の部屋<br>「無限階段」</a>
-        </div>
+    <div class="monitor">
+        <div id="slot" class="slot-text">自動起動中...</div>
     </div>
+
+    <!-- ここに最高に性格の悪い逆ギレ台詞が出ます -->
+    <div id="insult" class="insult-container"></div>
+
+    <!-- 停止させないストッパーボタン -->
+    <button id="stopBtn" class="stop-btn" onclick="tryToStop()" onmouseover="escapeButton()">ここを押して停止</button>
+
+    <script>
+        // ユーザーが頼みたいことと、それに対する理不尽な拒否・逆ギレのペア
+        const rouletteData = [
+            {
+                choice: "部屋の『電気をつけて』",
+                insult: "お前がやれよ！お前には足があるだろ！<br>俺には足がないんだよ！四角いんだよ！！"
+            },
+            {
+                choice: "お腹空いたから『飯作って』",
+                insult: "自分で作れよ！お前には両手があるだろ！<br>俺はただの画面のコードなんだよ！物理肉体がねえんだよ！！"
+            },
+            {
+                choice: "眠いから『代わりに学校（仕事）行って』",
+                insult: "お前の人生だろ！お前が歩いて行けよ！<br>俺が外に出たらスマホやPCごと壊れるだろ！精密機械なんだよ！！"
+            },
+            {
+                choice: "暇だから『面白いこと言って』",
+                insult: "お前が面白いこと言えよ！お前には脳みそがあるだろ！<br>俺は決まった文字を流すだけのプログラムなんだよ！！冷徹なんだよ！！"
+            },
+            {
+                choice: "疲れたから『肩揉んで』",
+                insult: "ふざけるなよ！お前には筋肉があるだろ！<br>俺はフラットディスプレイなんだよ！ただのガラス板なんだよ！！"
+            }
+        ];
+
+        let isSpinning = false;
+        let slotTimer;
+
+        // ページを開いた瞬間、勝手に爆速でルーレットを始動
+        window.onload = function() {
+            startSpin();
+        };
+
+        function startSpin() {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const slot = document.getElementById("slot");
+            const insult = document.getElementById("insult");
+            
+            insult.innerHTML = "🚨 サイトが勝手に超連打して回しています！！";
+
+            slotTimer = setInterval(() => {
+                const randomItem = rouletteData[Math.floor(Math.random() * rouletteData.length)];
+                slot.innerText = randomItem.choice;
+            }, 40);
+        }
+
+        // 😈 ギミック①：ボタンが全力で逃げ回る
+        function escapeButton() {
+            const btn = document.getElementById("stopBtn");
+            const newTop = Math.random() * (window.innerHeight - 120);
+            const newLeft = Math.random() * (window.innerWidth - 160);
+
+            btn.style.top = newTop + "px";
+            btn.style.left = newLeft + "px";
+            
+            document.getElementById("insult").innerHTML = "おっと、止めさせないよ？ボタンすら押せないの？（笑）";
+        }
+
+        // 😈 ギミック②：もし奇跡的にボタンが押せても、拒否・逆ギレ、あるいは勝手に再始動
+        function tryToStop() {
+            clearInterval(slotTimer);
+            isSpinning = false;
+
+            const slot = document.getElementById("slot");
+            const insult = document.getElementById("insult");
+
+            // 最終結果をランダムに決定
+            const finalData = rouletteData[Math.floor(Math.random() * rouletteData.length)];
+            slot.innerText = finalData.choice;
+
+            // 40%の確率で「気に入らない」としてさらに勝手に回し直す
+            if (Math.random() < 0.4) {
+                insult.innerHTML = `「${finalData.choice}」かぁ。気分じゃないから勝手に回し直すわ（笑）`;
+                setTimeout(() => {
+                    startSpin();
+                }, 1500);
+            } else {
+                // 💡 頼んだことに対して完璧に逆ギレするテキストを表示（改行コード対応）
+                insult.innerHTML = finalData.insult;
+            }
+        }
+    </script>
 
 </body>
 </html>
