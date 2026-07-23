@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>秘密の地下通路</title>
     <style>
-        /* 画面全体の闇を設定 */
         body {
             margin: 0;
             background-color: #050303;
@@ -16,9 +15,9 @@
             height: 100vh;
         }
 
-        /* 3D空間の奥行きを設定（数値が小さいほどパースがキツくなります） */
+        /* 3Dのカメラ視野を設定 */
         .stage {
-            perspective: 800px;
+            perspective: 600px;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -26,95 +25,106 @@
             align-items: center;
         }
 
-        /* 廊下全体を包むコンテナ */
+        /* 廊下のコンテナ */
         .corridor {
             position: relative;
             width: 400px;
             height: 400px;
             transform-style: preserve-3d;
-            /* スクロールやクリックに合わせて進むアニメーション（後述） */
-            transition: transform 1s ease-out;
         }
 
-        /* 壁の共通設定 */
+        /* レンガ壁・床・天井の共通アニメーション設定 */
+        .wall, .floor, .ceiling {
+            position: absolute;
+            /* 🚀 一定の速度で無限に背景を動かすアニメーション（3秒で1ループ） */
+            animation: walkForward 3s linear infinite;
+        }
+
+        /* 赤レンガ壁のデザイン */
         .wall {
-            position: absolute;
-            width: 800px; /* 奥行きを深くするために長めに設定 */
+            width: 1200px;
             height: 400px;
-            /* CSSだけでレンガ風の模様を表現（画像を読まないから爆速） */
-            background-color: #3d1c16;
+            background-color: #4a231c;
             background-image: 
-                linear-gradient(90deg, transparent 50%, rgba(0,0,0,.5) 50%),
-                linear-gradient(rgba(0,0,0,.5) 50%, transparent 50%);
-            background-size: 40px 20px;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.8); /* 奥を暗くする影 */
+                linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.4) 50%),
+                linear-gradient(rgba(0,0,0,0.4) 50%, transparent 50%);
+            background-size: 60px 30px; /* 横幅60pxで1ループする模様 */
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.9);
         }
 
-        /* 左のレンガ壁：90度回転させて左側に配置 */
+        /* 左のレンガ壁 */
         .left-wall {
-            transform: rotateY(90deg) translateZ(-400px) translateX(-400px);
+            transform: rotateY(90deg) translateZ(-200px) translateX(-600px);
         }
 
-        /* 右のレンガ壁：-90度回転させて右側に配置 */
+        /* 右のレンガ壁 */
         .right-wall {
-            transform: rotateY(-90deg) translateZ(-400px) translateX(400px);
+            transform: rotateY(-90deg) translateZ(-200px) translateX(600px);
         }
 
-        /* 床：石畳風 */
+        /* 床（暗い石畳風） */
         .floor {
-            position: absolute;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, #222 20%, #050505 80%);
-            transform: rotateX(90deg) translateZ(-200px) translateX(-200px);
-            opacity: 0.5;
+            width: 400px;
+            height: 1200px;
+            background: repeating-linear-gradient(#111 0px, #111 40px, #050505 41px, #050505 45px);
+            background-size: 100% 45px; /* 縦幅45pxで1ループ */
+            transform: rotateX(90deg) translateZ(-200px) translateY(-600px);
+            box-shadow: inset 0 0 100px rgba(0,0,0,1);
+            animation-name: walkFloor; /* 床専用の縦移動アニメーション */
         }
 
-        /* 奥に見える謎の光（地下への入り口） */
+        /* 天井（暗闇） */
+        .ceiling {
+            width: 400px;
+            height: 1200px;
+            background: #0d0908;
+            transform: rotateX(-90deg) translateZ(-200px) translateY(600px);
+            box-shadow: inset 0 0 100px rgba(0,0,0,1);
+            animation-name: walkCeiling; /* 天井専用の縦移動アニメーション */
+        }
+
+        /* 🔄 【壁の無限移動】背景のレンガ模様を横にスライドさせて前進を表現 */
+        @keyframes walkForward {
+            0% { background-position: 0px 0; }
+            100% { background-position: -60px 0; } /* レンガ1個分（60px）奥へ流す */
+        }
+
+        /* 🔄 【床の無限移動】 */
+        @keyframes walkFloor {
+            0% { background-position: 0 0px; }
+            100% { background-position: 0 -45px; } /* 石畳1個分奥へ流す */
+        }
+
+        /* 🔄 【天井の無限移動】 */
+        @keyframes walkCeiling {
+            0% { background-position: 0 0px; }
+            100% { background-position: 0 -45px; }
+        }
+
+        /* 奥に見える地下への暗闇（固定配置） */
         .portal {
             position: absolute;
-            width: 100px;
-            height: 150px;
-            background: radial-gradient(circle, #ff6600 0%, transparent 70%);
-            transform: translateZ(-800px) translateY(100px);
-            filter: blur(10px);
-            cursor: pointer;
-            animation: pulse 2s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: translateZ(-800px) translateY(100px) scale(0.9); opacity: 0.5; }
-            100% { transform: translateZ(-800px) translateY(100px) scale(1.1); opacity: 1; }
+            width: 120px;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255,255,255,0.05);
+            transform: translateZ(-1100px) translateY(80px);
+            box-shadow: 0 0 30px rgba(0,0,0,1);
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
     <div class="stage">
-        <div class="corridor" id="corridor">
-            <!-- 左右のレンガ壁 -->
+        <div class="corridor">
             <div class="wall left-wall"></div>
             <div class="wall right-wall"></div>
-            <!-- 床 -->
             <div class="floor"></div>
-            <!-- 奥に見える怪しい光 -->
-            <div class="portal" onclick="goDeeper()"></div>
+            <div class="ceiling"></div>
+            <div class="portal"></div>
         </div>
     </div>
-
-    <script>
-        // 奥の光をクリックすると、廊下が手前に迫ってきて「進む」演出
-        function goDeeper() {
-            const corridor = document.getElementById('corridor');
-            // Z軸（奥行き）を手前に700px移動させる
-            corridor.style.transform = 'translateZ(700px)';
-            
-            // 1秒後に地下のページへ切り替える（デモとしてアラートを表示）
-            setTimeout(() => {
-                alert('地下の秘密基地へ到達しました！ここに本編サイトを作ります。');
-            }, 1000);
-        }
-    </script>
 
 </body>
 </html>
